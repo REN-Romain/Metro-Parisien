@@ -86,21 +86,6 @@ Lancez l'extraction de l'arbre couvrant minimal et observez les connexions minim
 
 ---
 
-## Exemple d'Exécution
-
-```bash
-> Entrez la station de départ : Carrefour Pleyel
-> Entrez la station de destination : Villejuif, P. Vaillant Couturier
-
-- Vous êtes à Carrefour Pleyel.
-- Prenez la ligne 13 direction Châtillon-Montrouge.
-- À Champs-Élysées Clémenceau, changez pour la ligne 1 direction Château de Vincennes.
-- À Palais Royal - Musée du Louvre, changez pour la ligne 7 direction Villejuif - Louis Aragon.
-- Vous arriverez à Villejuif, P. Vaillant Couturier dans environ 29 minutes.
-```
-
----
-
 ## Algorithmes Utilisés
 
 - **Bellman-Ford** : Pour calculer le plus court chemin entre deux stations, en prenant en compte la possibilité de cycles négatifs (même si ici, cela n'est pas applicable au métro).
