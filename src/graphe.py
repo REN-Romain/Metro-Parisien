@@ -1,12 +1,17 @@
+# Import des librairies utilisées
 import re
+
+# Lecture du fichier metro.txt
 file = open("../project_file/metro.txt", "r")
 
+# Initialisation des listes contenant les stations et les arcs
 stations =  []
 aretes = []
-
+# Initialisation des expressions régulières utilisées pour récupérer les valeurs dans metro.txt
 vertex_regex = r"V (\d{4}) (.*?);(\d+|[0-9bis]+) ;(True|False) (\d)"
 edge_regex = r"E (\d+) (\d+) (\d+)"
 
+# Récupération des valeurs et ajout dans les listes stations et aretes
 for line in file:
     vertices = re.findall(vertex_regex, line)
     for v in vertices:
@@ -16,8 +21,8 @@ for line in file:
     for e in edges:
         aretes.append([int(e[0]), int(e[1]), int(e[2])])
 
+# Initialisation d'un dictionnaire graphe contenant les stations reliées entre elles
 graphe = {}
-
 for i in range(len(aretes)):
     if aretes[i][0] not in graphe:
         graphe[aretes[i][0]] = [(aretes[i][1], aretes[i][2])]
@@ -28,6 +33,5 @@ for i in range(len(aretes)):
     else :
         graphe[aretes[i][1]].append((aretes[i][0], aretes[i][2]))
 
-print(graphe)
-
+# Fermeture du fichier metro.txt
 file.close()
