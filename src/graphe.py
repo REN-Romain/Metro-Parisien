@@ -1,5 +1,6 @@
 # Import des librairies utilisées
-import re
+import re # Librairie d'expressions régulières
+import tkinter as tk # Librairie de l'interface graphique
 
 # Lecture du fichier metro.txt
 file = open("../project_file/metro.txt", "r")
@@ -7,6 +8,7 @@ file = open("../project_file/metro.txt", "r")
 # Initialisation des listes contenant les stations et les arcs
 stations =  []
 aretes = []
+
 # Initialisation des expressions régulières utilisées pour récupérer les valeurs dans metro.txt
 vertex_regex = r"V (\d{4}) (.*?);(\d+|[0-9bis]+) ;(True|False) (\d)"
 edge_regex = r"E (\d+) (\d+) (\d+)"
@@ -35,3 +37,13 @@ for i in range(len(aretes)):
 
 # Fermeture du fichier metro.txt
 file.close()
+
+# Création et paramètrage de la fenêtre principale
+fenetre = tk.Tk()
+fenetre.title("Metro Parisien")
+fenetre.geometry("800x800")
+
+label = tk.Label(fenetre, text="Hello World")
+label.pack()
+
+fenetre.mainloop()
