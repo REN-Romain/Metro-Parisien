@@ -85,11 +85,15 @@ def bellman_ford(graph, station_debut, station_fin):
     while station_actuel is not None:
         chemin.insert(0, station_actuel)
         station_actuel = predecesseurs[station_actuel]
-        
+    
+    station_precedente = None
     print("Le chemin le plus court est : ")
     for i in range(len(chemin)):
-        print(stations[chemin[i]][2] + " : " +stations[chemin[i]][1])
-        
+        if (stations[chemin[i]][1] == station_precedente):
+            print("Changement de ligne " + stations[chemin[i]][2] + " : " +stations[chemin[i]][1])
+        else : 
+            print(stations[chemin[i]][2] + " : " +stations[chemin[i]][1])
+        station_precedente = stations[chemin[i]][1]
     print("La distance totale est : ", distances[fin]//60, " minutes et" , distances[fin]%60, "secondes.")
 
     return chemin, distances[fin]
