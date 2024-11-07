@@ -1,11 +1,12 @@
 import re # Librairie d'expressions régulières
+import math # Librairie permettant certaines fonctions de calculs mathématiques
+
+# Initialisation des listes contenant les stations et les arcs
+stations =  []
+aretes = []
 
 # Fonction pour obtenir un graphe depuis le fichier test 
 def getGraphe(file):
-    # Initialisation des listes contenant les stations et les arcs
-    stations =  []
-    aretes = []
-
     # Initialisation des expressions régulières utilisées pour récupérer les valeurs dans metro.txt
     vertex_regex = r"V (\d{4}) (.*?);(\d+|[0-9bis]+) ;(True|False) (\d)"
     edge_regex = r"E (\d+) (\d+) (\d+)"
@@ -14,7 +15,7 @@ def getGraphe(file):
     for line in file:
         vertices = re.findall(vertex_regex, line)
         for v in vertices:
-            stations.append([int(v[0]), v[1], v[2], v[3], int(v[4])])
+            stations.append([int(v[0]), v[1][:-1], v[2], v[3], int(v[4])])
 
         edges = re.findall(edge_regex, line)
         for e in edges:
@@ -52,40 +53,48 @@ def isConnexe(graphe):
 
     return len(parcours) == len(graphe)
 
-# recherche du plus court chemin (bellman-ford)
-def bellman_ford(graph, start, end):
-    # Initialize distances from the start vertex to all other vertices as infinity
-    distances = {node: float('inf') for node in graph}
-    distances[start] = 0  # Distance to the start vertex is 0
-    predecessors = {node: None for node in graph}
+# Rercherche du plus court chemin (bellman-ford)
+def bellman_ford(graph, station_debut, station_fin):
+    debut = None
+    fin = None
+    for i in range(len(stations)):
+        if (stations[i][1] == station_debut):
+            debut = stations[i][0]
+        elif (stations[i][1] == station_fin):
+            fin = stations[i][0]
+    
+    if (debut == None or fin == None):
+        print("Erreur : Nom de station inexistant")
+        return None
+        
+    # Initialise les distances
+    distances = {noeud: float('inf') for noeud in graph}
+    distances[debut] = 0  
+    predecesseurs = {noeud: None for noeud in graph}
 
-    # Relax edges repeatedly
-    for _ in range(len(graph) - 1):
-        for node in graph:
-            for neighbor, weight in graph[node]:
-                if distances[node] + weight < distances[neighbor]:
-                    distances[neighbor] = distances[node] + weight
-                    predecessors[neighbor] = node
+    for i in range(len(graph) - 1):
+        for noeud in graph:
+            for voisin, poids in graph[noeud]:
+                if distances[noeud] + poids < distances[voisin]:
+                    distances[voisin] = distances[noeud] + poids
+                    predecesseurs[voisin] = noeud
 
-    # Check for negative weight cycles
-    for node in graph:
-        for neighbor, weight in graph[node]:
-            if distances[node] + weight < distances[neighbor]:
-                raise ValueError("Graph contains a negative weight cycle")
+    # Construit le chemin le plus court
+    chemin = []
+    station_actuel = fin
+    while station_actuel is not None:
+        chemin.insert(0, station_actuel)
+        station_actuel = predecesseurs[station_actuel]
+        
+    print("Le chemin le plus court est : ")
+    for i in range(len(chemin)):
+        print(stations[chemin[i]][2] + " : " +stations[chemin[i]][1])
+        
+    print("La distance totale est : ", distances[fin]//60, " minutes et" , distances[fin]%60, "secondes.")
 
-    # Reconstruct the shortest path from start to end
-    path = []
-    current = end
-    while current is not None:
-        path.insert(0, current)
-        current = predecessors[current]
+    return chemin, distances[fin]
 
-    if distances[end] == float('inf'):
-        return None, float('inf')
-
-    return path, distances[end]
-
-# recherche de l'arbre couvrant de poids minimum
+# Recherche de l'arbre couvrant de poids minimum
 def arbreCouvrant(graphe):
     debut = next(iter(graphe)) # choix arbitraire du départ 
 

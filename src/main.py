@@ -1,13 +1,28 @@
 from algo import *
 
-# test ouverture d'un graphe 
+# Test ouverture d'un graphe 
 file = open("project_file/metro.txt", "r")
 graphe = getGraphe(file)
+print()
+print("Voici le graphe stocké dans un dictionnaire : -------------------------------------")
 print(graphe)
 
-# test connexité d'un graphe
+# Test connexité d'un graphe
 file = open("project_file/metro.txt", "r")
-print(isConnexe(graphe))
+print()
+print("Voici le test de connexité du graphe : ")
+if (isConnexe(graphe)):
+    print("Le graphe est connexe")
+else :
+    print("Erreur : Le graphe n'est pas connexe")
+    
+# Test algorithme de Bellman-Ford
 
-# test algorithme de prim
+# Test algorithme de Prim
+print()
+print("Voici le test l'algorithme de Prim : ---------------------------------------------")
 print(arbreCouvrant(graphe))
+
+print()
+print("Voici le test de l'algorithme de Bellman-Ford")
+print(bellman_ford(graphe, "Carrefour Pleyel", "Villejuif, P. Vaillant Couturier"))
