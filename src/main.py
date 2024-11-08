@@ -2,7 +2,7 @@ from algo import *
 
 # Test ouverture d'un graphe 
 file = open("project_file/metro.txt", "r")
-graphe = getGraphe(file)
+graphe, stations = getGraphe(file)
 print()
 print("Voici le graphe stocké dans un dictionnaire : -------------------------------------")
 print(graphe)
@@ -25,4 +25,4 @@ print(arbreCouvrant(graphe))
 
 print()
 print("Voici le test de l'algorithme de Bellman-Ford")
-print(bellman_ford(graphe, "Carrefour Pleyel", "Villejuif, P. Vaillant Couturier"))
+print(bellmanFord(graphe, "Carrefour Pleyel", "Villejuif, P. Vaillant Couturier", stations))

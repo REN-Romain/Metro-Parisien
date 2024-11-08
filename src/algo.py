@@ -1,12 +1,12 @@
 import re # Librairie d'expressions régulières
 import math # Librairie permettant certaines fonctions de calculs mathématiques
 
-# Initialisation des listes contenant les stations et les arcs
-stations =  []
-aretes = []
-
 # Fonction pour obtenir un graphe depuis le fichier test 
 def getGraphe(file):
+    # Initialisation des listes contenant les stations et les arcs
+    stations =  []
+    aretes = []
+
     # Initialisation des expressions régulières utilisées pour récupérer les valeurs dans metro.txt
     vertex_regex = r"V (\d{4}) (.*?);(\d+|[0-9bis]+) ;(True|False) (\d)"
     edge_regex = r"E (\d+) (\d+) (\d+)"
@@ -15,7 +15,7 @@ def getGraphe(file):
     for line in file:
         vertices = re.findall(vertex_regex, line)
         for v in vertices:
-            stations.append([int(v[0]), v[1][:-1], v[2], v[3], int(v[4])])
+            stations.append([int(v[0]), v[1][:-1], v[2], v[3], int(v[4])]) # n° de station, nom, ligne de métro, terminus, n° de branchement 
 
         edges = re.findall(edge_regex, line)
         for e in edges:
@@ -33,13 +33,13 @@ def getGraphe(file):
         else :
             graphe[aretes[i][1]].append((aretes[i][0], aretes[i][2]))
     
-    return graphe
+    return graphe, stations
 
 
 # Fonction pour déterminser si le graphe est connexe (Parcours en largeur)
 def isConnexe(graphe):
     debut = next(iter(graphe)) # choix d'un sommet arbitraire
-    file = [debut] # file des éléments visités
+    file = [debut] # file des éléments à visités
     parcours = [debut] # liste des sommets visités
 
     while file:
@@ -54,7 +54,7 @@ def isConnexe(graphe):
     return len(parcours) == len(graphe)
 
 # Rercherche du plus court chemin (bellman-ford)
-def bellman_ford(graph, station_debut, station_fin):
+def bellmanFord(graph, station_debut, station_fin, stations):
     debut = None
     fin = None
     for i in range(len(stations)):
