@@ -1,5 +1,6 @@
 import re # Librairie d'expressions régulières
 import math # Librairie permettant certaines fonctions de calculs mathématiques
+import heapq  # Librairie pour les tas de priorité (min-heap)
 
 # Fonction pour obtenir un graphe depuis le fichier test 
 def getGraphe(file):
@@ -98,25 +99,31 @@ def bellmanFord(graph, station_debut, station_fin, stations):
 
     return chemin, distances[fin]
 
-# Recherche de l'arbre couvrant de poids minimum
 def arbreCouvrant(graphe):
-    debut = next(iter(graphe)) # choix arbitraire du départ 
+    # Choix arbitraire du départ (un sommet de l'arbre)
+    debut = next(iter(graphe))  # Choisir un sommet arbitraire
 
-    # initialisations
-    arbre = [] # liste des arêtes de l'arbre couvrant minimal
-    visites = set([debut])
-    aretes = [(poids, debut, voisin) for voisin, poids in graphe[debut]]
+    # Initialisations
+    arbre = []  # Liste des arêtes de l'arbre couvrant minimal
+    visites = set([debut])  # Ensemble des sommets visités
+    aretes = []  # Liste des arêtes à examiner, sous forme de tas de priorité
+
+    # Ajoute les arêtes du sommet de départ dans le tas
+    for voisin, poids in graphe[debut]:
+        heapq.heappush(aretes, (poids, debut, voisin))  # heapq permet de maintenir l'ordre par poids
 
     while aretes:
-        aretes.sort() # on trie d'abord les arêtes dans l'ordre croissant 
-        poids, u, v = aretes.pop(0) # on choisit l'arpete de plus petit poids 
+        # On extrait l'arête ayant le poids minimal
+        poids, u, v = heapq.heappop(aretes)
 
-        if v not in visites: # si le sommet n'a pas encore été visité, on l'ajoute dans l'arbre
-            arbre.append((u, v, poids))  
+        # Si le sommet v n'a pas été visité, on l'ajoute dans l'arbre
+        if v not in visites:
+            arbre.append((u, v, poids))  # On ajoute l'arête à l'arbre
             visites.add(v)
 
-            for voisin, poids_voisin in graphe[v]: # on rajoute les nouveaux sommets à vérifier (voisin du sommet visité )
+            # On ajoute toutes les arêtes sortant de v dans le tas
+            for voisin, poids_voisin in graphe[v]:
                 if voisin not in visites:
-                    aretes.append((poids_voisin, v, voisin))
-    
-    return arbre 
+                    heapq.heappush(aretes, (poids_voisin, v, voisin))
+
+    return arbre

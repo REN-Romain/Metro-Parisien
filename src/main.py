@@ -30,21 +30,22 @@ class MetroApp:
         # affichage de l'image de fond
         self.canvas.create_image(0, 0, anchor="nw", image=self.metro_photo)
 
-        # Frame pour le bouton et les messages
+        # Frame pour le bouton et les messages (modifié pour le placer en haut)
         self.control_frame = tk.Frame(self.root)
-        self.control_frame.pack(pady=10)
+        self.control_frame.pack(side="top", pady=10)  # Le frame est maintenant en haut
+
+        # bouton pour afficher l'ACPM (modifié pour qu'il reste à gauche dans la frame en haut)
+        self.acpm_button = tk.Button(self.control_frame, text="Afficher l'ACPM", command=self.afficherACPM)
+        self.acpm_button.pack(side="top", pady=5)  # Le bouton est maintenant en haut du frame
 
         # bouton pour réinitialiser la sélection des stations
         self.reset_button = tk.Button(self.control_frame, text="Réinitialiser", command=self.reinitialiser)
-        self.reset_button.pack(side="left", padx=10)
-
-        # bouton pour afficher l'ACPM
-        self.acpm_button = tk.Button(self.control_frame, text="Afficher l'ACPM", command=self.afficherACPM)
-        self.acpm_button.pack(side="left", padx=10)
+        self.reset_button.pack(side="top", padx=10, pady=5)
 
         # étiquette pour afficher des messages
         self.message_label = tk.Label(self.control_frame, text="Cliquez sur deux stations pour définir un parcours", font=("Arial", 12))
-        self.message_label.pack(side="left")
+        self.message_label.pack(side="top", pady=5)
+
 
         # liaison pour la gestion des clics
         self.canvas.bind("<Button-1>", self.gestionClic)
