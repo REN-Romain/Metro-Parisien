@@ -11,10 +11,17 @@ class MetroApp:
 
         # image de fond de la carte du métro
         self.metro_image = Image.open("project_file/metrof_r.png")
-        self.image_width, self.image_height = self.metro_image.size  # taille d'origine de l'image
+        
+        # appliquer un redimensionnement de l'image à 90%
+        self.image_width, self.image_height = self.metro_image.size
+        self.image_width = int(self.image_width * 0.85)
+        self.image_height = int(self.image_height * 0.85)
+        
+        # redimensionner l'image
+        self.metro_image = self.metro_image.resize((self.image_width, self.image_height))
         self.metro_photo = ImageTk.PhotoImage(self.metro_image)
 
-        # taille de la fenêtre ajustée pour correspondre à l'image
+        # taille de la fenêtre ajustée pour correspondre à l'image redimensionnée
         self.root.geometry(f"{self.image_width}x{self.image_height + 50}")  # +50 pour la zone des boutons
         # désactivation de la redimension de la fenêtre
         self.root.resizable(False, False)
@@ -27,7 +34,7 @@ class MetroApp:
         self.canvas = Canvas(self.root, width=self.image_width, height=self.image_height, bg="beige")
         self.canvas.pack()
 
-        # affichage de l'image de fond
+        # affichage de l'image de fond redimensionnée
         self.canvas.create_image(0, 0, anchor="nw", image=self.metro_photo)
 
         # Frame pour le bouton et les messages (modifié pour le placer en haut)
@@ -46,7 +53,6 @@ class MetroApp:
         self.message_label = tk.Label(self.control_frame, text="Cliquez sur deux stations pour définir un parcours", font=("Arial", 12))
         self.message_label.pack(side="top", pady=5)
 
-
         # liaison pour la gestion des clics
         self.canvas.bind("<Button-1>", self.gestionClic)
 
@@ -56,6 +62,7 @@ class MetroApp:
         self.graphe = None
         self.stations = None
         self.lines = []  # liste pour les lignes dessinées
+
 
     def lirePositions(self):
         """lecture des positions des stations à partir d'un fichier .txt et ajout de marqueurs bleus pour chaque station"""
@@ -168,7 +175,7 @@ class MetroApp:
     def afficherACPM(self):
         """Calcul et affichage de l'ACPM (Arbre de Couverture de Poids Minimal)"""
         # Remplacer cette ligne par le calcul de l'ACPM
-        acpm_parcours = arbreCouvrant(self.graphe, self.stations)  # Utilise l'algorithme de Prim
+        acpm_parcours, _ = arbreCouvrant(self.graphe, self.stations)  # Utilise l'algorithme de Prim
         if acpm_parcours:
             print("ACPM calculé avec succès")
             self.afficherParcours(acpm_parcours)

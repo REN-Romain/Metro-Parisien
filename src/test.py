@@ -21,7 +21,7 @@ else :
 # Test algorithme de Prim
 print()
 print("Voici le test l'algorithme de Prim : ---------------------------------------------")
-print(arbreCouvrant(graphe))
+print(arbreCouvrant(graphe, stations))
 
 print()
 print("Voici le test de l'algorithme de Bellman-Ford")

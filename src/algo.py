@@ -99,7 +99,7 @@ def bellmanFord(graph, station_debut, station_fin, stations):
 
     return chemin, distances[fin]
 
-def arbreCouvrant(graphe):
+def arbreCouvrant(graphe, stations):
     # Choix arbitraire du départ (un sommet de l'arbre)
     debut = next(iter(graphe))  # Choisir un sommet arbitraire
 
@@ -126,4 +126,19 @@ def arbreCouvrant(graphe):
                 if voisin not in visites:
                     heapq.heappush(aretes, (poids_voisin, v, voisin))
 
-    return arbre
+    # Conversion de l'arbre en chemin de stations avec distances (uniquement les identifiants)
+    chemin = []
+    total_distance = 0
+
+    # Pour chaque arête de l'arbre, reconstruire le chemin de stations
+    for u, v, poids in arbre:
+        chemin.append(u)
+        chemin.append(v)
+        total_distance += poids
+
+    # Suppression des doublons de stations consécutives dans le chemin
+    chemin = [chemin[0]] + [chemin[i] for i in range(1, len(chemin)) if chemin[i] != chemin[i - 1]]
+
+    return chemin, total_distance
+
+
