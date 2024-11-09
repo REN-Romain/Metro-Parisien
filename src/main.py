@@ -14,8 +14,8 @@ class MetroApp:
         
         # appliquer un redimensionnement de l'image à 90%
         self.image_width, self.image_height = self.metro_image.size
-        self.image_width = int(self.image_width * 0.85)
-        self.image_height = int(self.image_height * 0.85)
+        self.image_width = int(self.image_width)
+        self.image_height = int(self.image_height)
         
         # redimensionner l'image
         self.metro_image = self.metro_image.resize((self.image_width, self.image_height))

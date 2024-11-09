@@ -140,5 +140,3 @@ def arbreCouvrant(graphe, stations):
     chemin = [chemin[0]] + [chemin[i] for i in range(1, len(chemin)) if chemin[i] != chemin[i - 1]]
 
     return chemin, total_distance
-
-
