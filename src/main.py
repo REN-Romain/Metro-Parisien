@@ -13,7 +13,7 @@ class MetroApp:
         self.metro_image = Image.open("project_file/metrof_r.png")
         
         # appliquer un redimensionnement de l'image à 75%
-        self.scale = 0.75
+        self.scale = 1
         self.image_width, self.image_height = self.metro_image.size
         self.image_width = int(self.image_width * self.scale)
         self.image_height = int(self.image_height * self.scale)
