@@ -33,7 +33,7 @@ class MetroApp:
 
         # canvas pour afficher le fond et les lignes de métro
         self.canvas = Canvas(self.root, width=self.image_width + 60, height=self.image_height, bg="beige")
-        self.canvas.pack()
+        self.canvas.pack(side="left")
 
         # affichage de l'image de fond redimensionnée
         self.canvas.create_image(0, 0, anchor="nw", image=self.metro_photo)
@@ -53,6 +53,10 @@ class MetroApp:
         # étiquette pour afficher des messages, centré
         self.message_label = tk.Label(self.control_frame, text="Cliquez sur deux stations pour définir un parcours", font=("Arial", 12))
         self.message_label.pack(pady=5)
+
+        # texte pour afficher la liste des stations
+        self.text_output = tk.Text(self.control_frame, height=10, width=40, wrap="word")
+        self.text_output.pack(pady=5)
 
         # liaison pour la gestion des clics
         self.canvas.bind("<Button-1>", self.gestionClic)
@@ -109,6 +113,8 @@ class MetroApp:
 
     def afficherParcours(self, parcours):
         """affichage du chemin le plus court entre deux stations"""
+        self.text_output.delete("1.0", tk.END)  # Efface le contenu précédent
+        self.text_output.insert(tk.END, "Chemin le plus court:\n")
         for i in range(len(parcours) - 1):
             # coordonnées des stations actuelles et suivantes
             coord1 = self.getCoordonnees(parcours[i])
@@ -124,6 +130,9 @@ class MetroApp:
             else:
                 print(f"Erreur : Impossible de trouver les coordonnées pour {parcours[i]} ou {parcours[i + 1]}")
 
+        for station_id in parcours:
+            self.text_output.insert(tk.END, f" - {self.stations[station_id][1]}\n")
+        
     def clearLines(self):
         """effacement des lignes précédemment dessinées (chemin) sur le canvas"""
         for line in self.lines:
