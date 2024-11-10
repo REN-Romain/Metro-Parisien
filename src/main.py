@@ -12,17 +12,18 @@ class MetroApp:
         # image de fond de la carte du métro
         self.metro_image = Image.open("project_file/metrof_r.png")
         
-        # appliquer un redimensionnement de l'image à 90%
+        # appliquer un redimensionnement de l'image à 75%
+        self.scale = 0.75
         self.image_width, self.image_height = self.metro_image.size
-        self.image_width = int(self.image_width)
-        self.image_height = int(self.image_height)
+        self.image_width = int(self.image_width * self.scale)
+        self.image_height = int(self.image_height * self.scale)
         
         # redimensionner l'image
         self.metro_image = self.metro_image.resize((self.image_width, self.image_height))
         self.metro_photo = ImageTk.PhotoImage(self.metro_image)
 
         # taille de la fenêtre ajustée pour correspondre à l'image redimensionnée
-        self.root.geometry(f"{self.image_width}x{self.image_height + 50}")  # +50 pour la zone des boutons
+        self.root.geometry(f"{self.image_width + 400}x{self.image_height + 50}")  # +50 pour la zone des boutons
         # désactivation de la redimension de la fenêtre
         self.root.resizable(False, False)
 
@@ -31,27 +32,27 @@ class MetroApp:
         self.station_markers = {}  # clé : nom de la station, valeur : ID du cercle sur le canvas
 
         # canvas pour afficher le fond et les lignes de métro
-        self.canvas = Canvas(self.root, width=self.image_width, height=self.image_height, bg="beige")
+        self.canvas = Canvas(self.root, width=self.image_width + 60, height=self.image_height, bg="beige")
         self.canvas.pack()
 
         # affichage de l'image de fond redimensionnée
         self.canvas.create_image(0, 0, anchor="nw", image=self.metro_photo)
 
-        # Frame pour le bouton et les messages (modifié pour le placer en haut)
+        # Frame pour les boutons, en haut et centré
         self.control_frame = tk.Frame(self.root)
-        self.control_frame.pack(side="top", pady=10)  # Le frame est maintenant en haut
+        self.control_frame.pack(side="right", pady=10, anchor="n")
 
-        # bouton pour afficher l'ACPM (modifié pour qu'il reste à gauche dans la frame en haut)
+        # bouton pour afficher l'ACPM, centré
         self.acpm_button = tk.Button(self.control_frame, text="Afficher l'ACPM", command=self.afficherACPM)
-        self.acpm_button.pack(side="top", pady=5)  # Le bouton est maintenant en haut du frame
+        self.acpm_button.pack(pady=5)
 
-        # bouton pour réinitialiser la sélection des stations
+        # bouton pour réinitialiser la sélection des stations, centré sous le bouton ACPM
         self.reset_button = tk.Button(self.control_frame, text="Réinitialiser", command=self.reinitialiser)
-        self.reset_button.pack(side="top", padx=10, pady=5)
+        self.reset_button.pack(pady=5)
 
-        # étiquette pour afficher des messages
+        # étiquette pour afficher des messages, centré
         self.message_label = tk.Label(self.control_frame, text="Cliquez sur deux stations pour définir un parcours", font=("Arial", 12))
-        self.message_label.pack(side="top", pady=5)
+        self.message_label.pack(pady=5)
 
         # liaison pour la gestion des clics
         self.canvas.bind("<Button-1>", self.gestionClic)
@@ -63,18 +64,21 @@ class MetroApp:
         self.stations = None
         self.lines = []  # liste pour les lignes dessinées
 
-
     def lirePositions(self):
-        """lecture des positions des stations à partir d'un fichier .txt et ajout de marqueurs bleus pour chaque station"""
+        """Lecture des positions des stations à partir d'un fichier et ajout de marqueurs bleus réduits pour chaque station."""
         with open("project_file/pospoints.txt", "r", encoding="utf-8") as f:
             for line in f:
                 parts = line.strip().split(";")
                 x, y, nom = int(parts[0]), int(parts[1]), parts[2].replace("@", " ")
+
+                # Mise à l'échelle des coordonnées des stations
+                x = int(x * self.scale)
+                y = int(y * self.scale)
                 self.stations_positions.append((x, y, nom))
                 
-                # ajouter un marqueur bleu pour la station
-                marker = self.canvas.create_oval(x - 5, y - 5, x + 5, y + 5, fill="blue", outline="")
-                self.station_markers[nom] = marker  # enregistrer le marqueur avec le nom de la station
+                # Créer un marqueur plus petit (diamètre de 3) pour chaque station
+                marker = self.canvas.create_oval(x - 3, y - 3, x + 3, y + 3, fill="blue", outline="")
+                self.station_markers[nom] = marker
 
     def getStation(self, x, y, seuil=15):
         """nom de la station la plus proche des coordonnées cliquées, si elle est dans un rayon donné"""
@@ -175,10 +179,23 @@ class MetroApp:
     def afficherACPM(self):
         """Calcul et affichage de l'ACPM (Arbre de Couverture de Poids Minimal)"""
         # Remplacer cette ligne par le calcul de l'ACPM
-        acpm_parcours, _ = arbreCouvrant(self.graphe, self.stations)  # Utilise l'algorithme de Prim
-        if acpm_parcours:
+        arbre, _ = arbreCouvrant(self.graphe, self.stations)  # Utilise l'algorithme de Prim
+        if arbre:
             print("ACPM calculé avec succès")
-            self.afficherParcours(acpm_parcours)
+            for u, v, poids in arbre:
+                # coordonnées des deux stations
+                coord1 = self.getCoordonnees(u)
+                coord2 = self.getCoordonnees(v)
+
+                # vérification de la validité des coordonnées
+                if coord1 is not None and coord2 is not None:
+                    x1, y1 = coord1
+                    x2, y2 = coord2
+                    # dessin de la ligne et ajout dans la liste des lignes
+                    line = self.canvas.create_line(x1, y1, x2, y2, fill="red", width=2)
+                    self.lines.append(line)  # stockage de la ligne pour réinitialisation
+                else:
+                    print(f"Erreur : Impossible de trouver les coordonnées pour {u} ou {v}")
         else:
             print("Erreur dans le calcul de l'ACPM")
 
