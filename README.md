@@ -54,7 +54,7 @@ Pour améliorer l'expérience utilisateur, nous avons inclus une fonctionnalité
 
 1. Clonez le repository GitHub :
    ```bash
-   git clone https://github.com/username/Metro-Parisien.git
+   git clone https://github.com/REN-Romain/Metro-Parisien.git
    ```
 
 2. Installez les dépendances Python (si applicable) et lancer le programme :
