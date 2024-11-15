@@ -33,13 +33,12 @@ Pour améliorer l'expérience utilisateur, nous avons inclus une fonctionnalité
 
 ## Structure du Projet
 
-- `metro.txt` : Fichier contenant les données du réseau de métro sous forme de graphe.
-- `pospoints.txt` : Coordonnées des stations sur la carte.
-- `metrofr.png` : Image du plan du métro parisien.
+- `project_file/` : Répertoire contenant les fichiers sources du projet (la carte, les positions des points et les correspondances).
 - `src/` : Répertoire contenant le code source du projet.
 - `README.md` : Ce fichier de présentation du projet.
-- `rapport.pdf` : Rapport décrivant les algorithmes et structures de données utilisés (inclus dans la soumission finale).
-- `Makefile` ou `script.sh` : Permet de lancer le programme.
+- `enonce.pdf` : Le fichier détaillant l'énoncé du projet.
+- `rapport_final.pdf` : Rapport décrivant les algorithmes et structures de données utilisés (inclus dans la soumission finale).
+- `setup_and_run.sh` : Permet de lancer le programme.
 
 ---
 
@@ -47,26 +46,22 @@ Pour améliorer l'expérience utilisateur, nous avons inclus une fonctionnalité
 
 - **Python**
 - Bibliothèques nécessaires pour Python (si utilisé) : 
-  - `matplotlib` pour l'affichage des graphiques
+  - `pillow` pour l'affichage des images
   - `Tkinter` ou autre bibliothèque graphique pour l'interface utilisateur
+  - `math` pour certains calculs nécessitant cette librairie
 
 ### Installation
 
 1. Clonez le repository GitHub :
    ```bash
-   git clone https://github.com/username/metro-graph-project.git
-   cd metro-graph-project
+   git clone https://github.com/username/Metro-Parisien.git
    ```
 
-2. Installez les dépendances Python (si applicable) :
+2. Installez les dépendances Python (si applicable) et lancer le programme :
    ```bash
-   pip install -r requirements.txt
+    ./setup_and_run.sh
    ```
-
-3. Lancer le programme :
-   ```bash
-   python main.py
-   ```
+S'assurer d'avoir au moins la version 3.4 de Python pour l'installation (nécessite la librairie d'installation pip).
 
 ---
 
